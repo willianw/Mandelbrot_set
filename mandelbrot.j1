@@ -1,0 +1,34 @@
+SIZE=2000
+SCALE = 1023
+MAX_I = 10000
+f = open("mandelbrot.pgm", "w")
+
+write(f, "P2\n")
+write(f, "$SIZE $SIZE\n")
+write(f, "$SCALE\n") 
+
+function converge(x)
+	n = z = 0
+	while (n < MAX_I) & (abs(z) < 2)
+		z = z*z + x
+		n = n + 1
+	end
+	return n
+end
+
+function go()
+	for i in 0:SIZE, j in 0:SIZE
+		a = 2 - float(2*2*i)/SIZE
+		b = -2 + float(2*2*j)/SIZE
+		c = complex(b, a)
+		n = round(Int, float(converge(c)*SCALE)/MAX_I)
+		write(f, "$n\t")
+		print("Gerando: $(@sprintf("%2.1f", float(SIZE*i+j)/(SIZE*SIZE)*100))%\n")
+		if (j == SIZE)
+			write(f, "\n")
+		end	
+	end
+	close(f)
+end
+
+go()
