@@ -5,7 +5,7 @@ f = open("mandelbrot.pgm", "w")
 
 write(f, "P2\n")
 write(f, "$SIZE $SIZE\n")
-write(f, "$SCALE\n") 
+write(f, "$SCALE\n")
 
 function converge(x)
 	n = z = 0
@@ -13,22 +13,11 @@ function converge(x)
 		z = z*z + x
 		n = n + 1
 	end
-	return n
+	return round(Int, float(n*SCALE)/MAX_I)
 end
 
-function go()
-	for i in 0:SIZE, j in 0:SIZE
-		a = 2 - float(2*2*i)/SIZE
-		b = -2 + float(2*2*j)/SIZE
-		c = complex(b, a)
-		n = round(Int, float(converge(c)*SCALE)/MAX_I)
-		write(f, "$n\t")
-		print("Gerando: $(@sprintf("%2.1f", float(SIZE*i+j)/(SIZE*SIZE)*100))%\n")
-		if (j == SIZE)
-			write(f, "\n")
-		end	
-	end
-	close(f)
-end
+m = [complex(-2 + float(2*2*j)/SIZE, 2 - float(2*2*i)/SIZE) for  x in 0:SIZE, y in 0:SIZE]
 
-go()
+pmap(converge, m)
+
+close(f)
