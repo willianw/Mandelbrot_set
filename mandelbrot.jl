@@ -1,4 +1,6 @@
 # julia -p $(sysctl -n hw.ncpu) -i mandelbrot.jl
+using PyPlot
+
 
 const N_HEIGHT = 100
 const N_WIDTH = 1.5 * N_HEIGHT
@@ -26,4 +28,6 @@ M = [ coordinates(i, j) for i = 1:N_HEIGHT, j = 1:N_WIDTH]
 
 img = pmap(converge, M);
 
-println(size(img))
+PyPlot.gray()
+imshow(img, interpolation="none")
+colorbar()
